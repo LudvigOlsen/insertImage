@@ -23,7 +23,6 @@ By Ludvig R. Olsen,
 Cognitive Science, Aarhus University.  
 Started in Feb. 2017  
 
-
 Contact at:  
 r-pkgs@ludvigolsen.dk  
 

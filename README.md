@@ -31,7 +31,7 @@ Use
 ---
 
 -   Install package.
--   Add key command (e.g. mac: cmd-alt-shift-i, win: ctrl-alt-shift-i) by going to:
+-   Add key command by going to:
     -   *Tools* &gt; *Addins* &gt; *Browse Addins* &gt; *Keyboard Shortcuts*.
     -   Find **Insert Image** and press its field under *Shortcut*.
     -   Press desired key command.
