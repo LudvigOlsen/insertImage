@@ -46,7 +46,6 @@ insertImage <- function(){
   document_sub_dirs <- substr(document_path, nchar(workDir)+1,
                               nchar(document_path))
 
-
   # Choose image
   # opens browser
   img_source <- file.choose()
@@ -136,7 +135,7 @@ insertImage <- function(){
     }
 
     # Update img_source
-    img_source <- substr(new_path, nchar(workDir)+1, nchar(new_path))
+    img_source <- substr(new_path, nchar(workDir)+2, nchar(new_path))
 
     # Check if we're working in the working directory
     # E.g. we might work in /vignette/ folder
@@ -163,7 +162,7 @@ insertImage <- function(){
         n_sub_dirs <- countCharOccurrences("/", document_sub_dirs)
 
         # Add ../ to img_source for every subfolder to move up
-        img_source <- paste("..", rep("/..", n_sub_dirs-1), img_source, sep = "")
+        img_source <- paste(rep("../", n_sub_dirs), img_source, sep = "")
 
         }
 
@@ -185,7 +184,6 @@ insertImage <- function(){
                          paste("![",alt_text,"](",img_source,")", sep=""),
                          id = adc$id)
 
-
 }
 
 
@@ -196,7 +194,6 @@ create_dir <- function(dir, new_dir_name){
   # Only suppress the warning
   # that the directory already exists
   #
-
 
   tryCatch({
 
@@ -234,6 +231,8 @@ countCharOccurrences <- function(char, s) {
 }
 
 # Notes:
-# For each readline, create while loop checking if input is (y/n)
+# - For each readline, create while loop checking if input is (y/n)
+# - When choosing an image that is already in the project folder
+#   the path should still be relative.
 
 
