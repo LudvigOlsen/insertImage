@@ -277,11 +277,11 @@ copy_image <- function(img_source, new_path){
 
     # If it exists
     # Ask user if it should be overwritten or not
-    ovWrt <- readline_while("Files already exists. Overwrite? (y/n): ",
+    overwrite_input <- readline_while("Files already exists. Overwrite? (y/n): ",
                             c("y","Y","n","N"))
 
     # If yes
-    if (ovWrt == "y"){
+    if (overwrite_input == "y"){
 
       # Copy file and overwrite existing file
       file.copy(img_source, new_path, overwrite = TRUE, recursive = FALSE,
