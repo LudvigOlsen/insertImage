@@ -70,7 +70,7 @@ insertImage <- function(){
   if(!isTRUE(img_in_project)){
 
     # Ask user whether or not to copy file to project
-    copy_input <- readline("Copy file to project? (y/n): ")
+    copy_input <- readline_while("Copy file to project? (y/n): ", c("y","Y","n","N"))
 
   }
 
@@ -81,12 +81,12 @@ insertImage <- function(){
     # Update work_dir if user chooses to copy to
     # /vignettes directory
     np_wd <- create_new_path(work_dir, document_path,
-                             document_sub_dirs,
+                             document_sub_dirs, base,
                              img_folder='img')
 
     # Get new_path and work_dir from list
-    new_path <- np_wd['new_path']
-    work_dir <- np_wd['work_dir']
+    new_path <- np_wd[['new_path']]
+    work_dir <- np_wd[['work_dir']]
 
     # Check if file exists
     # If yes, ask user to overwrite or not
@@ -205,7 +205,7 @@ create_dir <- function(dir, new_dir_name){
 
 
 create_new_path <- function(work_dir, document_path,
-                            document_sub_dirs,
+                            document_sub_dirs, base,
                             img_folder='img'){
 
   #
@@ -226,7 +226,8 @@ create_new_path <- function(work_dir, document_path,
   if (document_sub_dirs == "/vignettes") {
 
     cat("You are working in the /vignettes directory.")
-    put_in_vignettes <- readline("Would you like to copy the image to this destination instead of /img? (y/n): ")
+    put_in_vignettes <- readline_while("Would you like to copy the image to this destination instead of /img? (y/n): ",
+                                       c("y","Y","n","N"))
 
     if (put_in_vignettes == "y") {
 
@@ -276,7 +277,8 @@ copy_image <- function(img_source, new_path){
 
     # If it exists
     # Ask user if it should be overwritten or not
-    ovWrt <- readline("Files already exists. Overwrite? (y/n): ")
+    ovWrt <- readline_while("Files already exists. Overwrite? (y/n): ",
+                            c("y","Y","n","N"))
 
     # If yes
     if (ovWrt == "y"){
@@ -298,9 +300,6 @@ copy_image <- function(img_source, new_path){
 }
 
 
-
-
-
 # Count how many times a char is in a string
 # Uli Köhler at
 # https://techoverflow.net/2012/11/10/r-count-occurrences-of-character-in-string/
@@ -309,9 +308,28 @@ count_char_occurrences <- function(char, s) {
   return (nchar(s) - nchar(s2))
 }
 
-# Notes:
-# - For each readline, create while loop checking if input is (y/n)
-# - When choosing an image that is already in the project folder
-#   the path should still be relative.
+
+readline_while <- function(message, responses = c("y","n")){
+
+  #
+  # Runs readline until an allowed answer is given
+  #
+
+  # message must be character
+  stopifnot(is.character(message))
+
+  # As long as resp is not in the list of allowed responses
+  # or it doesn't exist (first round)
+  while(!exists("resp") || !(resp %in% responses)){
+
+    # Ask user for input with the given message
+    resp <- readline(message)
+
+  }
+
+  # Return accepted user input
+  return(resp)
+
+}
 
 
