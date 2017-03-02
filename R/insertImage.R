@@ -36,14 +36,14 @@ insertImage <- function(){
   start <- adc$selection[1][[1]]$range$start
 
   # Get current working directory
-  workDir <- getwd()
+  work_dir <- getwd()
 
   # Get directory path of document
   document_path <- dirname(adc$path)
 
   # Remove working directory from document_path
   # Then we know which subfolders of the wd the document is in
-  document_sub_dirs <- substr(document_path, nchar(workDir)+1,
+  document_sub_dirs <- substr(document_path, nchar(work_dir)+1,
                               nchar(document_path))
 
   # Choose image
@@ -63,95 +63,54 @@ insertImage <- function(){
 
   }
 
-  # Ask user whether or not to copy file to project
-  moveOrNot <- readline("Copy file to project? (y/n): ")
+  # Check if image is in project
+  img_in_project <- grepl(work_dir, img_source)
+
+  # If image is NOT in project
+  if(!isTRUE(img_in_project)){
+
+    # Ask user whether or not to copy file to project
+    copy_input <- readline("Copy file to project? (y/n): ")
+
+  }
 
   # If user answered yes ("y")
-  if (moveOrNot == "y"){
+  if (exists("copy_input") && copy_input == "y"){
 
-    # Check if we're in a vignette
-    # images for vignettes for R packages should be
-    # in the vignettes source directory
-    # So ask user what to do
-    if (document_sub_dirs == "/vignettes") {
+    # Create new path for the image
+    # Update work_dir if user chooses to copy to
+    # /vignettes directory
+    np_wd <- create_new_path(work_dir, document_path,
+                             document_sub_dirs,
+                             img_folder='img')
 
-      cat("You are working in the /vignettes directory.")
-      putInVignettes <- readline("Would you like to copy the image to this destination instead of /img? (y/n): ")
+    # Get new_path and work_dir from list
+    new_path <- np_wd['new_path']
+    work_dir <- np_wd['work_dir']
 
-      if (putInVignettes == "y") {
-
-        # Change workDir to the document_path
-        # As we want to work with that folder from now on
-        workDir <- document_path
-
-        # Upcoming path of file
-        new_path <- paste(workDir, base, sep="/")
-
-      } else {
-
-        # Create img directory if non-existent
-        create_dir(workDir, "img")
-
-        # Upcoming path of file
-        new_path <- paste(workDir, "/img/", base, sep="")
-      }
-
-    } else {
-
-      # Create img directory if non-existent
-      create_dir(workDir, "img")
-
-      # Upcoming path of file
-      new_path <- paste(workDir, "/img/", base, sep="")
-
-    }
-
-    # Check if file already exists in img/ or vignettes/ folder
-    # Move if not
-    # Ask to overwrite or not if it already exists
-
-    # Check if file at the new path already exists
-    if(file.exists(new_path)){
-
-      # If it exists
-      # Ask user if it should be overwritten or not
-      ovWrt <- readline("Files already exists. Overwrite? (y/n): ")
-
-      # If yes
-      if (ovWrt == "y"){
-
-        # Copy file and overwrite existing file
-        file.copy(img_source, new_path, overwrite = TRUE, recursive = FALSE,
-                  copy.mode = TRUE, copy.date = TRUE)
-
-      }
-
-    # If the file doesn't already exist
-    } else {
-
-      # Copy file to new path
-      file.copy(img_source, new_path, overwrite = FALSE, recursive = FALSE,
-                copy.mode = TRUE, copy.date = TRUE)
-    }
+    # Check if file exists
+    # If yes, ask user to overwrite or not
+    # Copy image to new path
+    copy_image(img_source, new_path)
 
     # Update img_source
-    img_source <- substr(new_path, nchar(workDir)+2, nchar(new_path))
+    img_source <- substr(new_path, nchar(work_dir)+2, nchar(new_path))
 
     # Check if we're working in the working directory
-    # E.g. we might work in /vignette/ folder
+    # E.g. we might work in /vignettes/ folder
     # And so need to go up with ../
     # Notice though that if user said yes to copy the image
-    # to the vignettes directory, this became the path of workDir!
+    # to the vignettes directory, this became the path of work_dir!
 
     # Check if the document is in the
     # working directory or a subfolder
-    if (workDir != document_path) {
+    if (work_dir != document_path) {
 
       # If the working directory path is longer
       # than the document path
       # it means that the document is not
       # in the working directory or a subfolder
-      if (nchar(workDir)>nchar(document_path)){
+      if (nchar(work_dir)>nchar(document_path)){
 
         warning("Document is not in the working directory or a subfolder to the working directory.")
 
@@ -159,19 +118,42 @@ insertImage <- function(){
 
         # Get how many occurences of "/" there is after the working directory
         # aka. the count of subfolders to move up!
-        n_sub_dirs <- countCharOccurrences("/", document_sub_dirs)
+        n_sub_dirs <- count_char_occurrences("/", document_sub_dirs)
 
         # Add ../ to img_source for every subfolder to move up
         img_source <- paste(rep("../", n_sub_dirs), img_source, sep = "")
 
         }
 
-
     # If image is in vignettes directory
-    } else if (exists("putInVignettes") && putInVignettes == "y"){
+    } else if (exists("put_in_vignettes") && put_in_vignettes == "y"){
 
       # Remove "/" from img_source
       img_source <- substr(img_source, 2, nchar(img_source))
+    }
+
+
+  # If we don't move the file
+  # Check if file is in project
+  # If yes, make relative path
+
+  # Check if work_dir is in img_source
+  } else if (isTRUE(img_in_project)){
+
+    # Remove work_dir from img_source
+    img_source <- substr(img_source, nchar(work_dir)+2, nchar(img_source))
+
+    # Check if the document is in the
+    # working directory or a subfolder
+    if (work_dir != document_path) {
+
+      # Get how many occurences of "/" there is after the working directory
+      # aka. the count of subfolders to move up!
+      n_sub_dirs <- count_char_occurrences("/", document_sub_dirs)
+
+      # Add ../ to img_source for every subfolder to move up
+      img_source <- paste(rep("../", n_sub_dirs), img_source, sep = "")
+
     }
 
   }
@@ -222,10 +204,107 @@ create_dir <- function(dir, new_dir_name){
 }
 
 
+create_new_path <- function(work_dir, document_path,
+                            document_sub_dirs,
+                            img_folder='img'){
+
+  #
+  # Creates new path for image
+  # Checks if user is in /vignettes and so
+  # if user want to use that directory for images
+  # Else it creates 'img' directory in working directory
+  #
+  # Returns list with new path for image and the possibly changed
+  # work_dir path - we update this it if user wants
+  # to use /vignettes
+  #
+
+  # Check if we're in a vignette
+  # images for vignettes for R packages should be
+  # in the vignettes source directory
+  # So ask user what to do
+  if (document_sub_dirs == "/vignettes") {
+
+    cat("You are working in the /vignettes directory.")
+    put_in_vignettes <- readline("Would you like to copy the image to this destination instead of /img? (y/n): ")
+
+    if (put_in_vignettes == "y") {
+
+      # Change work_dir to the document_path
+      # As we want to work with that folder from now on
+      work_dir <- document_path
+
+      # Upcoming path of file
+      new_path <- paste(work_dir, base, sep="/")
+
+      return(list('new_path' = new_path, 'work_dir' = work_dir))
+
+    } else {
+
+      # Create img directory if non-existent
+      create_dir(work_dir, img_folder)
+
+      # Upcoming path of file
+      new_path <- paste(work_dir, "/", img_folder, "/", base, sep="")
+
+      return(list('new_path' = new_path, 'work_dir' = work_dir))
+    }
+
+  } else {
+
+    # Create img directory if non-existent
+    create_dir(work_dir, img_folder)
+
+    # Upcoming path of file
+    new_path <- paste(work_dir, "/", img_folder, "/", base, sep="")
+
+    return(list('new_path' = new_path, 'work_dir' = work_dir))
+
+  }
+
+}
+
+
+copy_image <- function(img_source, new_path){
+
+  # Check if file already exists in img/ or vignettes/ folder
+  # Move if not
+  # Ask to overwrite or not if it already exists
+
+  # Check if file at the new path already exists
+  if(file.exists(new_path)){
+
+    # If it exists
+    # Ask user if it should be overwritten or not
+    ovWrt <- readline("Files already exists. Overwrite? (y/n): ")
+
+    # If yes
+    if (ovWrt == "y"){
+
+      # Copy file and overwrite existing file
+      file.copy(img_source, new_path, overwrite = TRUE, recursive = FALSE,
+                copy.mode = TRUE, copy.date = TRUE)
+
+    }
+
+    # If the file doesn't already exist
+  } else {
+
+    # Copy file to new path
+    file.copy(img_source, new_path, overwrite = FALSE, recursive = FALSE,
+              copy.mode = TRUE, copy.date = TRUE)
+  }
+
+}
+
+
+
+
+
 # Count how many times a char is in a string
 # Uli Köhler at
 # https://techoverflow.net/2012/11/10/r-count-occurrences-of-character-in-string/
-countCharOccurrences <- function(char, s) {
+count_char_occurrences <- function(char, s) {
   s2 <- gsub(char,"",s)
   return (nchar(s) - nchar(s2))
 }
