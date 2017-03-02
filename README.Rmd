@@ -18,7 +18,7 @@ R package: Insert image from file chooser into Markdown. Copy image to project. 
 
 Inserts image code with alternative text specified by user in console.  
 
-If image file is not in the project (working directory or subdirectory) the user can copy the image file to the project. An img/ directory is created in the working directory, unless document is in vignettes/ directory in which case the user can choose to copy to this directory instead.    
+If image file is not in the project (working directory or subdirectory) the user can copy the image file to the project. An img/ directory is created in the working directory, unless the document is in vignettes/ directory in which case the user can choose to copy to this directory instead.    
 
 
 By Ludvig R. Olsen,  
