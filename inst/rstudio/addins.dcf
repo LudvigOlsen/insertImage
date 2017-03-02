@@ -1,4 +1,4 @@
 Name: Insert Image
-Description: Inserts image into Markdown
+Description: Inserts image into Markdown using file chooser
 Binding: insertImage
 Interactive: true
