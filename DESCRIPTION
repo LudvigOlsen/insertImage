@@ -13,3 +13,6 @@ LazyData: true
 Imports:
     rstudioapi (>= 0.5)
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
