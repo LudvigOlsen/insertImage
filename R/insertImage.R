@@ -1,3 +1,7 @@
+
+#   ____________________________________________________________________________
+#   Addin function insertImage()                                            ####
+
 #' @title Insert image.
 #' @description Addin for RStudio for inserting an image into Markdown.
 #'
@@ -25,12 +29,18 @@
 #' Press \code{Execute}.
 insertImage <- function(){
 
+##  ............................................................................
+##  Description                                                             ####
+
   #
   # Let's user insert image with file chooser
   # Allows copying image to project in /img/ OR
   # allows copying image to /vignettes/ if working in that
   # Let's user add alternative text via console
   #
+
+##  .................. #< b60a8fe2ea154247f9eca1814ce48b16 ># ..................
+##  Get context                                                             ####
 
   # Get document context
   # to get cursor position
@@ -50,9 +60,18 @@ insertImage <- function(){
   document_sub_dirs <- substr(document_path, nchar(work_dir)+1,
                               nchar(document_path))
 
+
+##  ............................................................................
+##  Get image                                                               ####
+### . . . . . . . . .. #< b63e699ff90d1dc99e9213ea7b486ce0 ># . . . . . . . . ..
+### Choose image file with file chooser                                     ####
+
   # Choose image
   # opens browser
   img_source <- file.choose()
+
+### . . . . . . . . .. #< b27b17258866d4cca7cb572249f8d095 ># . . . . . . . . ..
+### Check file                                                              ####
 
   # Get filename
   base <- basename(img_source)
@@ -67,16 +86,25 @@ insertImage <- function(){
 
   }
 
-  # Check if image is in project
+  # Check if image file is in project
   img_in_project <- grepl(work_dir, img_source)
+
+##  ............................................................................
+##  Copy Image                                                              ####
+### . . . . . . . . .. #< cab9ba97fb978bff771b9c0f539eba5f ># . . . . . . . . ..
+### User input - copy image?                                                ####
 
   # If image is NOT in project
   if(!isTRUE(img_in_project)){
 
     # Ask user whether or not to copy file to project
-    copy_input <- readline_while("Copy file to project? (y/n): ", c("y","Y","n","N"))
+    copy_input <- readline_while("Copy file to project? (y/n): ",
+                                 c("y","Y","n","N"))
 
   }
+
+### . . . . . . . . .. #< 4f5087d140913429edb2409d9c6acaf0 ># . . . . . . . . ..
+### Yes                                                                     ####
 
   # If user answered yes ("y")
   if (exists("copy_input") && copy_input == "y"){
@@ -136,6 +164,8 @@ insertImage <- function(){
       img_source <- substr(img_source, 2, nchar(img_source))
     }
 
+### . . . . . . . . .. #< 99095bceac7615ed43cee1d38507e36f ># . . . . . . . . ..
+### No                                                                      ####
 
   # If we don't move the file
   # Check if file is in project
@@ -162,8 +192,14 @@ insertImage <- function(){
 
   }
 
+##  .................. #< 8fde521cb673efd21026924967608532 ># ..................
+##  User input - alternative text                                           ####
+
   # Ask user to input caption
   alt_text <- readline("Enter caption: ")
+
+##  .................. #< 4b18020deae154a06e0abe03b1cb3d84 ># ..................
+##  Insert image code to markdown                                           ####
 
   # Insert image code
   rstudioapi::insertText(location = c(start['row'], start['column']),
@@ -173,167 +209,6 @@ insertImage <- function(){
 }
 
 
-create_dir <- function(dir, new_dir_name){
 
-  #
-  # Create directory
-  # Only suppress the warning
-  # that the directory already exists
-  #
-
-  tryCatch({
-
-    # Try to create new folder in
-    # current working directory
-    dir.create(file.path(dir, new_dir_name))
-
-  }, warning = function(w){
-
-    # If the directory already exists
-    # we don't need to see the warning
-    if (grepl('already exists', w$message)){
-
-      return(NULL)
-
-      # If the warning is from something else
-      # we want to see it
-    } else {
-
-      warning(w)
-
-    }
-
-  })
-
-}
-
-
-create_new_path <- function(work_dir, document_path,
-                            document_sub_dirs, base,
-                            img_folder='img'){
-
-  #
-  # Creates new path for image
-  # Checks if user is in /vignettes and so
-  # if user want to use that directory for images
-  # Else it creates 'img' directory in working directory
-  #
-  # Returns list with new path for image and the possibly changed
-  # work_dir path - we update this it if user wants
-  # to use /vignettes
-  #
-
-  # Check if we're in a vignette
-  # images for vignettes for R packages should be
-  # in the vignettes source directory
-  # So ask user what to do
-  if (document_sub_dirs == "/vignettes") {
-
-    cat("You are working in the /vignettes directory.")
-    put_in_vignettes <- readline_while("Would you like to copy the image to this destination instead of /img? (y/n): ",
-                                       c("y","Y","n","N"))
-
-    if (put_in_vignettes == "y") {
-
-      # Change work_dir to the document_path
-      # As we want to work with that folder from now on
-      work_dir <- document_path
-
-      # Upcoming path of file
-      new_path <- paste(work_dir, base, sep="/")
-
-      return(list('new_path' = new_path, 'work_dir' = work_dir))
-
-    } else {
-
-      # Create img directory if non-existent
-      create_dir(work_dir, img_folder)
-
-      # Upcoming path of file
-      new_path <- paste(work_dir, "/", img_folder, "/", base, sep="")
-
-      return(list('new_path' = new_path, 'work_dir' = work_dir))
-    }
-
-  } else {
-
-    # Create img directory if non-existent
-    create_dir(work_dir, img_folder)
-
-    # Upcoming path of file
-    new_path <- paste(work_dir, "/", img_folder, "/", base, sep="")
-
-    return(list('new_path' = new_path, 'work_dir' = work_dir))
-
-  }
-
-}
-
-
-copy_image <- function(img_source, new_path){
-
-  # Check if file already exists in img/ or vignettes/ folder
-  # Move if not
-  # Ask to overwrite or not if it already exists
-
-  # Check if file at the new path already exists
-  if(file.exists(new_path)){
-
-    # If it exists
-    # Ask user if it should be overwritten or not
-    overwrite_input <- readline_while("Files already exists. Overwrite? (y/n): ",
-                            c("y","Y","n","N"))
-
-    # If yes
-    if (overwrite_input == "y"){
-
-      # Copy file and overwrite existing file
-      file.copy(img_source, new_path, overwrite = TRUE, recursive = FALSE,
-                copy.mode = TRUE, copy.date = TRUE)
-
-    }
-
-    # If the file doesn't already exist
-  } else {
-
-    # Copy file to new path
-    file.copy(img_source, new_path, overwrite = FALSE, recursive = FALSE,
-              copy.mode = TRUE, copy.date = TRUE)
-  }
-
-}
-
-
-# Count how many times a char is in a string
-# Uli Köhler at
-# https://techoverflow.net/2012/11/10/r-count-occurrences-of-character-in-string/
-count_char_occurrences <- function(char, s) {
-  s2 <- gsub(char,"",s)
-  return (nchar(s) - nchar(s2))
-}
-
-
-readline_while <- function(message, responses = c("y","n")){
-
-  #
-  # Runs readline until an allowed answer is given
-  #
-
-  # message must be character
-  stopifnot(is.character(message))
-
-  # As long as resp is not in the list of allowed responses
-  # or it doesn't exist (first round)
-  while(!exists("resp") || !(resp %in% responses)){
-
-    # Ask user for input with the given message
-    resp <- readline(message)
-
-  }
-
-  # Return accepted user input
-  return(resp)
-
-}
 
 
