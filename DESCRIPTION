@@ -1,0 +1,15 @@
+Package: insertImage
+Title: RStudio addin for inserting image into R Markdown
+Version: 0.0.0.9000
+Date: 2017-03-02
+Authors@R: person("Ludvig Renbo", "Olsen", email = "r-pkgs@ludvigolsen.dk", role = c("aut", "cre"))
+Description: RStudio addin. Insert image from file chooser into R Markdown. Move
+    image to project.
+Depends:
+    R (>= 3.3.2)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    rstudioapi (>= 0.5)
+RoxygenNote: 5.0.1

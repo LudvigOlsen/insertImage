@@ -1,0 +1,52 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# insertImage
+
+R package: Insert image from file chooser into R Markdown. Move image to project. Addin for RStudio.
+
+Inserts image code with alternative text specified by user in console.  
+
+
+By Ludvig R. Olsen,  
+Cognitive Science, Aarhus University.  
+Started in Feb. 2017  
+
+
+Contact at:  
+r-pkgs@ludvigolsen.dk  
+
+
+Main functions:   
+
+* insertImage   
+
+## Installation  
+Development version:  
+
+> install.packages("devtools")
+>
+> devtools::install_github("LudvigOlsen/insertImage")  
+
+## Use
+
+* Install package.
+* Add key command by going to:   
+    - *Tools* > *Addins* > *Browse Addins* > *Keyboard Shortcuts*.  
+    - Find **Insert Image** and press its field under *Shortcut*. 
+    - Press desired key command.
+    - Press *Apply*.
+    - Press *Execute*.
+* Press chosen key command inside R Markdown document.  
+

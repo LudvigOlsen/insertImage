@@ -1,0 +1,4 @@
+Name: Insert Image
+Description: Inserts image into Markdown
+Binding: insertImage
+Interactive: true

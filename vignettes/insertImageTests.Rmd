@@ -1,0 +1,21 @@
+---
+title: "Test insertImage"
+author: "Ludvig R Olsen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Test insertImage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+
+#insertImage()
+
+
+```
+ 
+<!-- ![hej](20160813_044720.jpg)  -->
+<!-- ![heej](/Users/ludvigolsen/Dropbox/R development/LRO.utilities/20160813_044720.jpg) -->
+<!-- ![Heej](../img/20160813_044720.jpg) -->
