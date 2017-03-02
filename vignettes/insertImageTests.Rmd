@@ -11,11 +11,15 @@ vignette: >
 
 ```{r}
 
+
 #insertImage()
 
 
 ```
  
+ 
+<!-- ![heeej](/Users/ludvigolsen/Dropbox/R development/insertImage/img/20160813_044720.jpg) -->
+
 <!-- ![hej](20160813_044720.jpg)  -->
 <!-- ![heej](/Users/ludvigolsen/Dropbox/R development/LRO.utilities/20160813_044720.jpg) -->
 <!-- ![Heej](../img/20160813_044720.jpg) -->
