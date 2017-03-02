@@ -1,10 +1,14 @@
 #' @title Insert image.
-#' @description Addin for RStudio for inserting image into R Markdown.
+#' @description Addin for RStudio for inserting an image into Markdown.
+#'
+#' Copy the image file to the project in img/ or /vignette directory.
+#'
+#' Uses relative paths for image files in project and absolute paths for images not in project.
 #'
 #' See \code{details} for setting up key command.
 #' @author Ludvig Renbo Olsen, \email{r-pkgs@ludvigolsen.dk}
 #' @export
-#' @return Inserts \code{![alt](path/to/file)}
+#' @return Inserts \code{![alt](path/to/file)}. Optionally copies file to project.
 #' @details How to set up key command in RStudio:
 #'
 #' After installing package.

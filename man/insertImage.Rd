@@ -7,10 +7,14 @@
 insertImage()
 }
 \value{
-Inserts \code{![alt](path/to/file)}
+Inserts \code{![alt](path/to/file)}. Optionally copies file to project.
 }
 \description{
-Addin for RStudio for inserting image into R Markdown.
+Addin for RStudio for inserting an image into Markdown.
+
+Copy the image file to the project in img/ or /vignette directory.
+
+Uses relative paths for image files in project and absolute paths for images not in project.
 
 See \code{details} for setting up key command.
 }
