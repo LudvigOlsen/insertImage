@@ -9,6 +9,8 @@ Inserts image code with alternative text specified by user in console.
 
 If image file is not in the project (working directory or subdirectory) the user can copy the image file to the project. An img/ directory is created in the working directory, unless the document is in vignettes/ directory in which case the user can choose to copy to this directory instead.
 
+Note: On Linux and possibly other OSes, if you are not asked whether to move an image that is not already in your working directory (or sub directory) to your working directory, it might help to *set the working directory* to the folder in which your active document exists.
+
 By Ludvig R. Olsen,
 Cognitive Science, Aarhus University.
 Started in Feb. 2017
